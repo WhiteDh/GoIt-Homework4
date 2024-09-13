@@ -1,10 +1,5 @@
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.stream.*;
 
 public class StreamApiHomework {
     private long seed =0;
@@ -57,22 +52,28 @@ public class StreamApiHomework {
         return iterate;
     }
 
-    public static <T> Stream<T> zip(Stream<T> first, Stream<T> second){
-        int min;
+    public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
+        Iterator<T> iterator1 = first.iterator();
+        Iterator<T> iterator2 = second.iterator();
 
-        List<T> firstList = new ArrayList<>();
-        List<T> secondList = new ArrayList<>();
+        Iterator<T> zippedIterator = new Iterator<>() {
+            private boolean toggle = false;
 
-        first.forEach(firstList::add);
-        second.forEach(secondList::add);
+            @Override
+            public boolean hasNext() {
+                return iterator1.hasNext() && iterator2.hasNext();
+            }
 
-        if(first.count()<second.count()) min = (int) first.count();
-        else min =(int) second.count();
+            @Override
+            public T next() {
+                toggle = !toggle;
+                return toggle ? iterator1.next() : iterator2.next();
+            }
+        };
 
-
-        return IntStream.range(0, min)
-                .mapToObj(i -> Stream.of(firstList.get(i), secondList.get(i)))
-                .flatMap(s -> s);
+        return StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(zippedIterator, Spliterator.ORDERED),
+                false
+        );
     }
-
 }

@@ -25,11 +25,11 @@ public class Main {
 
 
         //ех 5
-        Stream<String> first = Stream.of("1", "2", "3");
+        Stream<String> first = Stream.of("F", "DD", "SSS");
         Stream<String> second = Stream.of("1", "2", "3", "4");
 
         Stream<String> zippedStream = streamApiHomework.zip(first, second);
-        zippedStream.forEach(System.out::println);
+        zippedStream.forEach(System.out::print);
 
 
     }
